@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gim Edukasi IPS Kelas 9 - Sang Ekonom Digital</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            background-color: #ffffff;
+            width: 95%;
+            max-width: 900px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            overflow: hidden;
+            position: relative;
+            padding: 40px 30px;
+            margin: 20px 0;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Start Screen */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 30px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #475569;
+        }
+
+        .input-group input {
+            padding: 15px;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+        }
+
+        .btn {
+            background: #f59e0b; /* Amber / Gold */
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.2s, background 0.3s;
+            box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        /* Quiz Screen */
+        .header-quiz {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: #64748b;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #f59e0b;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            text-align: left;
+            line-height: 1.5;
+            color: #334155;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .option-letter {
+            font-weight: 800;
+            background: #e2e8f0;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 6px;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .option:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .option.correct-reveal {
+            background: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        .option.correct-reveal .option-letter {
+            background: #10b981;
+            color: white;
+        }
+
+        .option.wrong-reveal {
+            background: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        .option.wrong-reveal .option-letter {
+            background: #ef4444;
+            color: white;
+        }
+
+        #next-btn {
+            background: #0ea5e9; /* Light Blue */
+            box-shadow: 0 4px 6px rgba(14, 165, 233, 0.3);
+            display: none;
+            margin: 0;
+            max-width: 100%;
+        }
+        #next-btn:hover {
+            background: #0284c7;
+        }
+
+        /* Result Screen */
+        .result-container {
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 5rem;
+            font-weight: 800;
+            color: #f59e0b;
+            margin: 10px 0;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        .btn-download {
+            background: #10b981;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+            margin-top: 20px;
+        }
+
+        .btn-download:hover {
+            background: #059669;
+        }
+
+        /* Custom Modal (Replaces Alert) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-box p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+        .modal-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        canvas {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px 15px; }
+            .header-quiz { flex-direction: column; gap: 10px; align-items: flex-start; }
+            .option { padding: 12px; font-size: 0.95rem; }
+            .score-display { font-size: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Custom Modal -->
+<div class="modal-overlay" id="custom-modal">
+    <div class="modal-box">
+        <p id="modal-text">Pesan di sini</p>
+        <button class="modal-btn" onclick="closeModal()">Mengerti</button>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Start Screen -->
+    <div id="start-screen" class="screen active">
+        <h1>📈 Sang Ekonom Digital 🌍</h1>
+        <p style="text-align: center; margin-bottom: 30px; color: #64748b; font-size: 1.1rem;">
+            Tantangan Evaluasi 50 Soal HOTS IPS Kelas 9<br>
+            (Ekonomi Digital, Literasi Finansial & Interaksi Abad 21)
+        </p>
+        <div class="input-group">
+            <label for="player-name">Nama Peserta Didik:</label>
+            <input type="text" id="player-name" placeholder="Masukkan nama lengkapmu..." autocomplete="off">
+        </div>
+        <button class="btn" onclick="startGame()">Mulai Evaluasi</button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="screen">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="header-quiz">
+            <span id="question-tracker">Soal 1 / 50</span>
+            <span id="player-display" style="background:#f1f5f9; padding:5px 12px; border-radius:20px;"></span>
+        </div>
+        <div id="question-text" class="question-text">Teks Soal</div>
+        <div id="options-container" class="options">
+            <!-- Options injected by JS -->
+        </div>
+        <button id="next-btn" class="btn" onclick="nextQuestion()">Selanjutnya</button>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result-screen" class="screen">
+        <div class="result-container">
+            <h2>Evaluasi Selesai, <span id="final-name" style="color: #0ea5e9;"></span>! 🎉</h2>
+            <p style="color: #64748b; margin-top: 10px;">Kemampuan Analisis & Evaluasi (HOTS C5) kamu menghasilkan skor:</p>
+            <div class="score-display" id="final-score">0</div>
+            <p style="margin-bottom: 30px; color: #475569;" id="feedback-text"></p>
+            
+            <button class="btn btn-download" onclick="downloadCertificate()">Unduh Sertifikat 🏆</button>
+            <button class="btn" style="margin-top: 15px; background: #64748b;" onclick="location.reload()">Ulangi Gim</button>
+        </div>
+    </div>
+</div>
+
+<canvas id="cert-canvas" width="1000" height="700"></canvas>
+
+<script>
+    // --- 50 HOTS C5 (EVALUASI) QUESTIONS ---
+    const questions = [
+        // TEMA 1: PERKEMBANGAN EKONOMI DIGITAL (1-10)
+        {
+            q: "Pemerintah menetapkan kebijakan pajak bagi e-commerce asing yang beroperasi di Indonesia. Sebuah UMKM lokal mengeluh karena bahan baku impor yang biasa mereka beli via platform tersebut menjadi lebih mahal. Sebagai ekonom, evaluasi mana yang paling tepat terhadap kebijakan pemerintah tersebut?",
+            options: [
+                "Kebijakan tersebut gagal karena justru mematikan UMKM lokal yang bergantung pada bahan baku impor murah.",
+                "Kebijakan tersebut tepat secara makro untuk menciptakan kesetaraan (level playing field) antara produk asing dan lokal, meski UMKM perlu adaptasi mencari substitusi bahan baku lokal.",
+                "Pajak e-commerce asing sebaiknya dihapus sama sekali agar konsumen diuntungkan dengan harga yang sangat murah.",
+                "Pemerintah seharusnya hanya memungut pajak dari pembeli, bukan dari platform e-commerce asing tersebut."
+            ],
+            answer: 1
+        },
+        {
+            q: "Tren 'Gig Economy' (pekerja lepas seperti ojek online atau freelancer) berkembang pesat di era digital. Jika dievaluasi dari sisi perlindungan tenaga kerja jangka panjang, kelemahan paling fundamental dari sistem ini adalah...",
+            options: [
+                "Fleksibilitas waktu yang tinggi membuat pekerja menjadi malas berinovasi.",
+                "Tidak adanya jaminan sosial yang mengikat (seperti asuransi kesehatan/pensiun dari perusahaan) yang memindahkan risiko sepenuhnya ke individu.",
+                "Pendapatan yang diperoleh terlalu besar sehingga memicu inflasi di tingkat daerah.",
+                "Pekerja tidak diwajibkan membayar pajak sehingga merugikan kas negara secara langsung."
+            ],
+            answer: 1
+        },
+        {
+            q: "Banyak startup lokal yang melakukan 'bakar uang' (promo besar-besaran) untuk meraih pengguna, namun akhirnya bangkrut. Evaluasi kegagalan model bisnis ini menunjukkan bahwa...",
+            options: [
+                "Masyarakat Indonesia belum siap dengan teknologi digital dan masih menyukai transaksi konvensional.",
+                "Loyalitas konsumen yang didapat dari diskon bersifat semu, sehingga ketika harga kembali normal, bisnis kehilangan pendapatan untuk bertahan.",
+                "Pemerintah terlalu banyak ikut campur dalam mengatur regulasi startup lokal.",
+                "Sistem keamanan aplikasi startup lokal sangat lemah sehingga mudah diretas oleh pesaing."
+            ],
+            answer: 1
+        },
+        {
+            q: "Di era ekonomi digital, data pribadi pengguna dianggap sebagai 'The New Oil'. Sebuah aplikasi gratis meminta akses ke galeri dan kontak Anda padahal aplikasi tersebut hanya berupa kalkulator. Evaluasi risiko dari situasi ini adalah...",
+            options: [
+                "Aplikasi akan bekerja lebih cepat karena terhubung dengan seluruh data di ponsel cerdas.",
+                "Potensi komersialisasi data tanpa izin (pelanggaran privasi) yang bisa berujung pada penipuan atau profiling target iklan secara ilegal.",
+                "Aplikasi tersebut sebenarnya adalah virus yang akan merusak perangkat keras (hardware) ponsel Anda.",
+                "Tidak ada risiko berarti karena data kontak dan galeri tidak memiliki nilai ekonomi di pasar digital."
+            ],
+            answer: 1
+        },
+        {
+            q: "Otomatisasi dan AI (Kecerdasan Buatan) perlahan menggantikan pekerjaan kasir dan customer service. Dari sudut pandang pembangunan ekonomi berkelanjutan, langkah evaluasi paling strategis yang harus diambil oleh pemerintah adalah...",
+            options: [
+                "Melarang sama sekali penggunaan AI di perusahaan untuk melindungi lapangan kerja manusia.",
+                "Membiarkan seleksi alam terjadi, di mana manusia yang tidak bisa AI akan tersingkir dengan sendirinya.",
+                "Mereformasi kurikulum pendidikan vokasi untuk melakukan 'upskilling' agar tenaga kerja memiliki keahlian analisis dan kreatif yang tidak bisa digantikan AI.",
+                "Memberikan subsidi uang tunai seumur hidup kepada seluruh pekerja yang digantikan oleh mesin otomatis."
+            ],
+            answer: 2
+        },
+        {
+            q: "Munculnya 'Content Creator' menjadi profesi baru yang menjanjikan secara finansial. Namun, banyak kreator yang membuat konten kontroversial (prank berbahaya) demi 'views'. Evaluasi dampak fenomena ini terhadap struktur sosial-ekonomi masyarakat adalah...",
+            options: [
+                "Meningkatkan perputaran ekonomi secara signifikan tanpa memberikan dampak negatif pada moralitas sosial.",
+                "Menciptakan ekonomi yang tidak etis, di mana metrik keuntungan (adSense) mendisrupsi norma sosial dan berpotensi menurunkan kualitas literasi penonton.",
+                "Fenomena wajar karena dalam ekonomi kapitalis, semua hal boleh dilakukan selama menghasilkan uang dan disukai audiens.",
+                "Kreator konten tersebut harus dijadikan duta budaya karena berhasil memanfaatkan peluang ekonomi digital dengan maksimal."
+            ],
+            answer: 1
+        },
+        {
+            q: "Adanya 'Digital Divide' (Kesenjangan Digital) antara desa dan kota menyebabkan program digitalisasi ekonomi UMKM di pedesaan sering mandek. Berdasarkan analisis, apa intervensi paling tepat untuk menyelesaikan akar masalah ini?",
+            options: [
+                "Membagikan ribuan smartphone gratis setiap tahun ke penduduk desa.",
+                "Memaksa UMKM desa untuk pindah ke kota agar mendapat sinyal yang bagus.",
+                "Membangun infrastruktur jaringan internet (BTS) yang merata, dibarengi dengan program pendampingan literasi digital intensif bagi warga.",
+                "Menghentikan program digitalisasi di desa dan membiarkan mereka menggunakan sistem barter tradisional."
+            ],
+            answer: 2
+        },
+        {
+            q: "Perusahaan Big Tech sering dituduh melakukan monopoli dengan membeli perusahaan rintisan (startup) kecil yang berpotensi menjadi pesaing mereka. Mengapa praktik ini dievaluasi sangat berbahaya bagi iklim ekonomi digital?",
+            options: [
+                "Mematikan inovasi karena mencegah munculnya kompetitor baru yang bisa memberikan harga lebih murah dan layanan lebih baik bagi konsumen.",
+                "Menguntungkan pemerintah karena hanya perlu memantau satu atau dua perusahaan besar saja untuk urusan pajak.",
+                "Menjadikan aplikasi lebih sedikit di app store sehingga konsumen tidak kebingungan memilih.",
+                "Membuat perusahaan kecil merasa dihargai karena dibeli dengan harga yang sangat mahal oleh perusahaan besar."
+            ],
+            answer: 0
+        },
+        {
+            q: "Sebuah desa wisata mempromosikan destinasinya 100% menggunakan media sosial dan menerima pemesanan hanya via platform asing. Setelah dianalisis, risiko ekonomi terbesar dari ketergantungan ini adalah...",
+            options: [
+                "Desa akan menjadi sangat terkenal di seluruh dunia dalam waktu satu malam.",
+                "Jika algoritma platform berubah atau platform diblokir, aliran pendapatan desa wisata tersebut bisa terhenti seketika.",
+                "Turis lokal tidak akan mau datang karena mengira biayanya menggunakan mata uang asing.",
+                "Pemerintah daerah tidak akan bisa memungut retribusi kebersihan dari desa wisata tersebut."
+            ],
+            answer: 1
+        },
+        {
+            q: "Pemanfaatan Cloud Computing (komputasi awan) membuat biaya operasional bisnis digital menjadi sangat murah dibandingkan menyewa server fisik. Namun, evaluasi kelemahan utama dari sistem ini bagi kedaulatan data suatu negara adalah...",
+            options: [
+                "Data menjadi lebih berat untuk diunduh karena tersimpan di awan.",
+                "Data warga negara berisiko disimpan di server luar negeri yang tidak tunduk pada hukum negara asal jika terjadi kebocoran (data breach).",
+                "Cloud computing memakan kuota internet yang terlalu besar dari pengguna aplikasi lokal.",
+                "Server awan sangat mudah hancur jika terjadi perubahan cuaca atau badai matahari."
+            ],
+            answer: 1
+        },
+
+        // TEMA 2: UANG DAN LEMBAGA KEUANGAN (11-20)
+        {
+            q: "Saat terjadi inflasi yang tinggi (harga barang melonjak tajam), Bank Sentral (BI) memutuskan untuk menaikkan suku bunga acuan. Evaluasi bagaimana kebijakan ini diharapkan dapat menyelamatkan perekonomian!",
+            options: [
+                "Suku bunga tinggi membuat orang malas menabung dan memilih membelanjakan uangnya, sehingga pabrik cepat kaya.",
+                "Suku bunga kredit menjadi mahal, masyarakat mengurangi pinjaman dan konsumsi, sehingga jumlah uang beredar turun dan harga barang kembali stabil.",
+                "Pemerintah dapat mencetak uang lebih banyak untuk menutupi harga barang yang naik.",
+                "Bank akan memberikan bunga yang sangat rendah agar masyarakat miskin bisa meminjam uang untuk membeli sembako."
+            ],
+            answer: 1
+        },
+        {
+            q: "Andi memiliki opsi meminjam modal usaha dari Bank Umum (dengan syarat agunan yang ketat) atau dari Pinjol Ilegal (tanpa syarat tapi bunga 5% per hari). Jika Andi memilih Pinjol dengan alasan kecepatan, evaluasi dampak finansial jangka panjangnya!",
+            options: [
+                "Usaha Andi akan cepat maju karena uangnya langsung cair dalam hitungan menit tanpa repot.",
+                "Andi terhindar dari penyitaan aset karena pinjol ilegal tidak meminta agunan rumah.",
+                "Andi berpotensi masuk ke dalam 'lingkaran setan' utang akibat akumulasi bunga majemuk tak wajar yang akan menguras seluruh aset dan merusak mentalnya.",
+                "Pinjol ilegal akan menghapus utang Andi secara otomatis jika usaha Andi terbukti bangkrut."
+            ],
+            answer: 2
+        },
+        {
+            q: "Lembaga Penjamin Simpanan (LPS) menjamin uang nasabah di bank maksimal Rp 2 Miliar. Jika seorang nasabah kaya membagi uangnya yang berjumlah Rp 10 Miliar ke 5 bank yang berbeda (masing-masing Rp 2 Miliar), evaluasi strategi nasabah tersebut!",
+            options: [
+                "Strategi tersebut ilegal karena mencoba menipu pemerintah dan LPS.",
+                "Strategi mitigasi risiko yang sangat cerdas dan legal, sehingga jika kelima bank tersebut bangkrut, seluruh uangnya (10M) tetap dijamin LPS.",
+                "Tindakan yang sia-sia karena LPS hanya mengakui nama satu nasabah untuk total keseluruhan bank di Indonesia.",
+                "Berisiko tinggi karena membagi uang berarti membagi jumlah keuntungan bunga menjadi lebih sedikit."
+            ],
+            answer: 1
+        },
+        {
+            q: "Masyarakat saat ini perlahan meninggalkan uang kartal (kertas/logam) dan beralih ke uang elektronik (e-money/QRIS). Evaluasi keuntungan makroekonomi bagi negara dengan adanya 'Cashless Society' ini!",
+            options: [
+                "Negara menghemat triliunan rupiah dari biaya pencetakan, distribusi, dan pemusnahan uang fisik, serta transaksi ekonomi lebih mudah dilacak untuk pajak.",
+                "Memudahkan negara untuk menyadap pembicaraan pribadi warga negara melalui aplikasi perbankan.",
+                "Bank Sentral tidak perlu lagi memantau inflasi karena uang elektronik tidak terpengaruh oleh kenaikan harga barang.",
+                "Uang elektronik mencegah pencuri untuk mengambil barang di rumah masyarakat."
+            ],
+            answer: 0
+        },
+        {
+            q: "Banyak generasi muda (Gen Z) lebih memilih menabung dalam bentuk Emas Antam (logam mulia) dibandingkan menaruh uang di rekening bank tabungan biasa. Evaluasi dasar pemikiran finansial yang melatarbelakangi keputusan ini!",
+            options: [
+                "Emas memiliki bunga bulanan yang jauh lebih besar daripada bank.",
+                "Uang di bank terkena biaya administrasi bulanan dan inflasi menggerus nilainya, sedangkan emas berfungsi sebagai 'lindung nilai' (hedge) terhadap inflasi jangka panjang.",
+                "Emas sangat mudah digunakan untuk berbelanja kebutuhan sehari-hari di minimarket.",
+                "Emas adalah satu-satunya mata uang resmi yang diakui oleh Perserikatan Bangsa-Bangsa."
+            ],
+            answer: 1
+        },
+        {
+            q: "Koperasi Simpan Pinjam sering kali memberikan pembagian Sisa Hasil Usaha (SHU) di akhir tahun kepada anggotanya, hal yang tidak ada pada Bank Umum. Evaluasi nilai sosial-ekonomi dari sistem koperasi ini!",
+            options: [
+                "Koperasi memonopoli perputaran uang di suatu daerah.",
+                "Menciptakan pemerataan kesejahteraan berdasarkan asas kekeluargaan, di mana keuntungan dikembalikan kepada anggota sesuai kontribusinya, bukan hanya pada pemilik modal.",
+                "Sistem yang merugikan karena SHU memotong uang kas koperasi sehingga koperasi mudah bangkrut.",
+                "Koperasi memaksa anggotanya untuk selalu berutang agar SHU yang didapat lebih besar."
+            ],
+            answer: 1
+        },
+        {
+            q: "Otoritas Jasa Keuangan (OJK) memiliki fungsi krusial dalam mengawasi industri jasa keuangan. Jika suatu negara tidak memiliki lembaga seperti OJK, apa evaluasi risiko sistemik terbesarnya?",
+            options: [
+                "Bunga bank akan turun drastis karena tidak ada yang memungut pajak.",
+                "Masyarakat akan dengan mudah meminjam uang tanpa batas dari negara asing.",
+                "Terjadinya 'shadow banking' (bank gelap), penipuan investasi bodong, dan kebangkrutan bank massal tanpa peringatan dini yang akan menghancurkan kepercayaan publik.",
+                "Pemerintah daerah bebas mencetak mata uang sendiri untuk menyejahterakan rakyatnya."
+            ],
+            answer: 2
+        },
+        {
+            q: "Perbankan Syariah menggunakan prinsip bagi hasil (Mudharabah) dan menghindari sistem bunga (Riba). Jika seorang pengusaha meminjam modal dengan sistem bagi hasil dan kebetulan usahanya merugi karena bencana alam, evaluasi dampaknya menurut sistem syariah!",
+            options: [
+                "Pengusaha tetap wajib mengembalikan seluruh modal beserta tambahan denda keterlambatan.",
+                "Bank menyita seluruh aset pribadi pengusaha untuk menutupi kerugian.",
+                "Kerugian finansial (modal) ditanggung oleh pihak Bank, sedangkan pengusaha rugi waktu dan tenaga, karena risiko ditanggung bersama berdasarkan prinsip keadilan.",
+                "Pemerintah yang harus mengganti uang bank tersebut menggunakan dana APBN."
+            ],
+            answer: 2
+        },
+        {
+            q: "Ketika nilai tukar Rupiah melemah tajam terhadap Dolar AS (Depresiasi), seorang produsen tempe lokal terancam gulung tikar. Analisis keterkaitan lembaga keuangan dan situasi ini!",
+            options: [
+                "Bank dunia memaksa produsen tempe untuk mengekspor produknya ke Amerika.",
+                "Kedelai lokal mendadak hilang dari pasaran karena dibeli oleh eksportir.",
+                "Kelemahan Rupiah membuat harga kedelai impor naik drastis; Bank Sentral (BI) perlu melakukan intervensi pasar valas untuk menstabilkan kurs demi melindungi industri berbahan baku impor.",
+                "OJK akan memberikan asuransi ganti rugi kepada seluruh produsen tempe secara otomatis."
+            ],
+            answer: 2
+        },
+        {
+            q: "Pegadaian memiliki slogan 'Mengatasi Masalah Tanpa Masalah'. Saat seseorang butuh dana mendadak untuk biaya rumah sakit dan menggadaikan BPKB motornya, evaluasi mengapa opsi ini lebih 'aman' dibanding Pinjol!",
+            options: [
+                "Pegadaian tidak pernah mengenakan biaya bunga/sewa modal sama sekali.",
+                "Jika gagal bayar, aset yang diagunkan (motor) disita dan dilelang, namun peminjam tidak akan diteror penagih utang (debt collector) atau data pribadinya disebar.",
+                "Pegadaian memberikan jumlah uang 10 kali lipat dari harga asli motor tersebut.",
+                "BPKB motor yang digadaikan akan diubah namanya menjadi milik negara secara permanen."
+            ],
+            answer: 1
+        },
+
+        // TEMA 3: INTERAKSI ABAD KE-21 (21-30)
+        {
+            q: "Media sosial menciptakan fenomena 'Filter Bubble' (Gelembung Filter), di mana algoritma hanya menampilkan informasi yang disukai pengguna. Evaluasi dampak negatif fenomena ini terhadap interaksi sosial dalam masyarakat demokrasi!",
+            options: [
+                "Pengguna menjadi sangat pintar karena fokus pada satu bidang ilmu saja.",
+                "Menciptakan polarisasi yang tajam karena masyarakat kehilangan kemampuan melihat sudut pandang kelompok lain (Echo Chamber), memicu intoleransi dan konflik opini.",
+                "Masyarakat menjadi apatis dan sama sekali tidak mau menggunakan internet lagi.",
+                "Demokrasi berjalan sangat lancar karena semua orang selalu setuju dengan informasi yang dibacanya."
+            ],
+            answer: 1
+        },
+        {
+            q: "Fenomena 'Cancel Culture' (boikot massal di internet terhadap individu/perusahaan yang dianggap salah) sering terjadi di abad 21. Secara sosiologis, evaluasi fungsi dan bahaya dari tindakan ini!",
+            options: [
+                "Hanya berfungsi menghibur netizen tanpa ada dampak nyata pada pihak yang diboikot.",
+                "Berfungsi sebagai sanksi sosial instan (check and balance), namun sangat berbahaya karena sering kali menghakimi tanpa proses pengadilan yang adil (Trial by Mob).",
+                "Sepenuhnya positif karena aparat kepolisian tidak perlu lagi bekerja menangani kasus pelanggaran.",
+                "Berbahaya bagi satelit komunikasi karena menyebabkan lalu lintas internet yang terlalu padat saat boikot terjadi."
+            ],
+            answer: 1
+        },
+        {
+            q: "Interaksi virtual melalui ruang kerja maya (Remote Working/Zoom) melunturkan batas antarnegara. Seorang desainer grafis di Bandung bisa bekerja full-time untuk perusahaan di Kanada. Evaluasi keuntungan kompetitif dari situasi ini bagi Indonesia!",
+            options: [
+                "Desainer tersebut wajib pindah warga negara menjadi warga Kanada.",
+                "Pemasukan devisa bagi negara meningkat melalui remitansi digital, serta transfer teknologi/budaya kerja internasional tanpa 'Brain Drain' (ilmuwan pindah secara fisik).",
+                "Merugikan Indonesia karena Kanada akan mencuri karya seni budaya lokal secara gratis.",
+                "Pemerintah akan kesulitan mendata jumlah penduduk karena banyak yang bekerja secara gaib."
+            ],
+            answer: 1
+        },
+        {
+            q: "Jejak Digital (Digital Footprint) bersifat permanen. Seorang remaja sering mengunggah ujaran kebencian secara anonim di media sosial. Evaluasi risiko jangka panjang yang paling rasional dari tindakan tersebut terhadap masa depannya!",
+            options: [
+                "Ia akan direkrut oleh perusahaan keamanan siber internasional karena kemampuannya menyembunyikan identitas.",
+                "Tidak ada risiko karena akun anonim tidak mungkin bisa dilacak oleh teknologi apapun.",
+                "Jejak digital dapat dilacak (doxing) dan akan merusak reputasinya saat melamar pekerjaan, beasiswa, atau saat mencoba berinteraksi sosial di dunia nyata di masa depan.",
+                "Akunnya akan otomatis dihapus oleh sistem setelah 2 tahun tanpa meninggalkan sisa di server."
+            ],
+            answer: 2
+        },
+        {
+            q: "Hoaks (berita bohong) finansial, seperti ajakan membeli saham pom-pom (pom-pom stock) menyebar masif lewat grup perpesanan. Evaluasi mengapa masyarakat literasi rendah mudah terjebak interaksi manipulatif ini!",
+            options: [
+                "Mereka menganggap semua informasi di internet diunggah langsung oleh pemerintah sehingga pasti benar.",
+                "Adanya bias konfirmasi dan sifat FOMO (Fear Of Missing Out) atau takut tertinggal keuntungan cepat, menutupi logika rasional untuk mengecek kebenaran sumber (Fact-checking).",
+                "Hoaks finansial biasanya menggunakan bahasa sandi rahasia yang terlihat sangat akademis.",
+                "Mereka dibayar oleh pembuat hoaks untuk membagikan informasi tersebut kepada orang lain."
+            ],
+            answer: 1
+        },
+        {
+            q: "Konsep 'Global Citizen' (Warga Dunia) muncul akibat interaksi intens di abad 21, di mana isu perubahan iklim atau HAM menjadi kepedulian bersama lintas negara. Evaluasi tantangan konsep ini terhadap identitas nasional (Nasionalisme) pelajar Indonesia!",
+            options: [
+                "Nasionalisme akan sepenuhnya hilang dan digantikan oleh bahasa universal yang baru.",
+                "Pelajar cenderung melupakan Pancasila karena terlalu sibuk mengurus masalah politik negara lain.",
+                "Tantangannya adalah menyeimbangkan wawasan dan empati global dengan tetap melestarikan akar budaya lokal dan nilai-nilai kebangsaan (Glocalization).",
+                "Pelajar Indonesia akan dipaksa wajib militer oleh Perserikatan Bangsa-Bangsa."
+            ],
+            answer: 2
+        },
+        {
+            q: "Influencer sering memamerkan gaya hidup mewah (Flexing) yang memicu budaya konsumerisme tinggi pada pengikutnya. Jika dievaluasi secara psikologi sosial ekonomi, hal ini akan menyebabkan...",
+            options: [
+                "Meningkatnya angka tabungan masyarakat karena ingin cepat kaya seperti influencer.",
+                "Munculnya 'Lifestyle Inflation', di mana masyarakat memaksakan diri berutang (paylater/pinjol) demi status sosial palsu agar terlihat setara di dunia maya.",
+                "Industri barang mewah dalam negeri akan mengalahkan dominasi barang impor.",
+                "Pemerintah akan menurunkan harga barang-barang mewah agar terjangkau oleh seluruh rakyat."
+            ],
+            answer: 1
+        },
+        {
+            q: "Interaksi abad 21 memungkinkan budaya lokal seperti Tari Kecak atau Batik dipromosikan lewat TikTok/Reels hingga viral di luar negeri. Evaluasi nilai tambah yang diperoleh selain pengakuan budaya!",
+            options: [
+                "Hanya mendapatkan jumlah 'likes' yang banyak tanpa ada efek nyata di dunia nyata.",
+                "Memicu efek ganda ekonomi (multiplier effect) berupa peningkatan kunjungan pariwisata, penjualan cinderamata, dan devisa secara langsung.",
+                "Budaya lokal tersebut akan diklaim oleh negara asing yang pertama kali memviralkannya.",
+                "Tari Kecak harus diubah menyesuaikan selera pasar Eropa agar terus viral."
+            ],
+            answer: 1
+        },
+        {
+            q: "Penggunaan 'Chatbot' AI (seperti ChatGPT) mulai menggantikan tutor sebaya dalam interaksi belajar siswa. Evaluasi sisi negatif paling kritis dari pergeseran gaya interaksi pendidikan ini!",
+            options: [
+                "Siswa akan menjadi lebih lambat dalam membaca buku fisik.",
+                "Hilangnya empati sosial, menurunnya kemampuan diskusi dialektika antarsesama manusia, dan potensi penyalinan jawaban mentah-mentah (plagiarisme/kemalasan berpikir).",
+                "AI sering memberikan virus ke dalam komputer siswa saat digunakan.",
+                "Sekolah tidak perlu lagi membangun gedung kelas fisik sama sekali."
+            ],
+            answer: 1
+        },
+        {
+            q: "Istilah 'Netiquette' (Etika Berinternet) menjadi sangat penting di abad ke-21. Mengapa netiquette dievaluasi sama pentingnya dengan etika di dunia nyata?",
+            options: [
+                "Karena pelanggaran di internet secara otomatis memotong pulsa/kuota internet pengguna.",
+                "Karena komunikasi teks kehilangan intonasi dan bahasa tubuh, sehingga risiko salah paham, ketersinggungan (flaming), dan konflik hukum (UU ITE) sangat tinggi.",
+                "Hanya untuk memenuhi syarat pendaftaran media sosial saat mencentang kolom persetujuan.",
+                "Agar pengguna mendapatkan lencana (badge) anak baik dari penyedia layanan internet."
+            ],
+            answer: 1
+        },
+
+        // TEMA 4: PERKEMBANGAN TRANSAKSI EKONOMI DI ERA DIGITAL (31-40)
+        {
+            q: "Transaksi menggunakan QRIS (Quick Response Code Indonesian Standard) kini bisa dilakukan di Thailand dan Malaysia. Evaluasi dampak strategis integrasi sistem pembayaran lintas negara ini bagi turis Indonesia!",
+            options: [
+                "Turis Indonesia harus membayar dengan Rupiah yang kursnya diturunkan oleh pedagang asing.",
+                "Memudahkan transaksi tanpa perlu menukar uang kertas fisik di Money Changer, menghindari risiko kurs tidak menguntungkan, dan memacu pariwisata intra-ASEAN.",
+                "Pemerintah Indonesia kehilangan kontrol atas aliran dana yang keluar negeri secara liar.",
+                "Bank sentral Thailand dan Malaysia akan mengontrol penuh rekening bank milik warga Indonesia."
+            ],
+            answer: 1
+        },
+        {
+            q: "Maraknya penggunaan fitur 'PayLater' (Beli sekarang bayar nanti) pada platform e-commerce di kalangan mahasiswa. Jika dievaluasi secara literasi keuangan, mengapa instrumen ini seperti pedang bermata dua?",
+            options: [
+                "Paylater memberikan barang gratis jika pengguna menghapus akun setelah barang sampai.",
+                "Di satu sisi membantu likuiditas mendesak, di sisi lain fitur sekali-klik memicu perilaku belanja impulsif yang berujung tumpukan utang dan denda telat bayar berlipat ganda.",
+                "Bunga paylater jauh lebih murah dibandingkan meminjam uang dari koperasi mahasiswa.",
+                "Paylater hanya bisa digunakan untuk membeli buku dan kebutuhan pendidikan, sehingga sangat aman."
+            ],
+            answer: 1
+        },
+        {
+            q: "Beberapa negara (seperti El Salvador) menetapkan mata uang Kripto (Bitcoin) sebagai alat pembayaran sah. Evaluasi risiko terbesar jika Indonesia mengadopsi kebijakan serupa pada saat ini!",
+            options: [
+                "Bitcoin terlalu berat ukurannya untuk disimpan dalam smartphone standar.",
+                "Volatilitas (fluktuasi harga) kripto yang sangat ekstrem dalam hitungan menit akan menghancurkan stabilitas harga barang kebutuhan pokok dan sistem perbankan nasional.",
+                "Rakyat Indonesia tidak bisa berbahasa Inggris untuk memahami kode Bitcoin.",
+                "Pemerintah akan sangat mudah memonopoli kekayaan rakyat dengan meretas jaringan kripto."
+            ],
+            answer: 1
+        },
+        {
+            q: "Bank Indonesia merencanakan penerbitan 'Rupiah Digital' (CBDC - Central Bank Digital Currency). Apa yang secara fundamental mengevaluasi perbedaan Rupiah Digital dengan Uang Kripto seperti Bitcoin?",
+            options: [
+                "Rupiah digital hanya berbentuk koin fisik yang ditanami chip, kripto sepenuhnya maya.",
+                "Rupiah digital diterbitkan dan dijamin otoritasnya oleh Bank Sentral secara terpusat (Centralized), sedangkan Bitcoin bersifat desentralisasi tanpa jaminan otoritas negara manapun.",
+                "Tidak ada bedanya, keduanya sama-sama fluktuatif dan digunakan untuk pencucian uang.",
+                "Rupiah digital hanya berlaku di pulau Jawa, kripto berlaku di seluruh dunia."
+            ],
+            answer: 1
+        },
+        {
+            q: "Kasus pembobolan (skimming) dan peretasan (hacking) pada rekening E-Wallet/Mobile Banking kian marak. Dari sisi manajemen risiko, langkah preventif yang paling harus dievaluasi dan diperkuat oleh pengguna adalah...",
+            options: [
+                "Menarik semua uang tunai dan menyimpannya di bawah kasur kamar tidur.",
+                "Mengaktifkan Autentikasi Dua Faktor (2FA), tidak pernah membagikan OTP kepada siapapun, dan menghindari jaringan Wi-Fi publik saat bertransaksi.",
+                "Menghapus aplikasi M-Banking setelah selesai digunakan lalu mengunduhnya lagi setiap hari.",
+                "Mendaftarkan rekening dengan menggunakan nama samaran dan tanggal lahir palsu."
+            ],
+            answer: 1
+        },
+        {
+            q: "Model bisnis 'Dropshipping' (menjual barang tanpa stok, barang dikirim langsung oleh supplier ke pembeli) sangat populer di era digital. Evaluasi kelemahan/risiko utama dari model transaksi ekonomi ini bagi si penjual (dropshipper)!",
+            options: [
+                "Dropshipper harus menyewa gudang penyimpanan yang sangat luas dan mahal.",
+                "Tidak adanya kendali atas kualitas barang (Quality Control) dan kecepatan pengiriman, sehingga jika barang rusak/telat, reputasi dropshipper yang akan hancur di mata konsumen.",
+                "Dropshipper harus memproduksi barang dagangannya sendiri dengan mesin canggih.",
+                "Pemerintah melarang keras praktik ini karena dianggap sebagai pasar gelap (Black Market)."
+            ],
+            answer: 1
+        },
+        {
+            q: "Kehadiran 'Smart Contract' (Kontrak Pintar) pada teknologi Blockchain memungkinkan perjanjian transaksi dieksekusi otomatis tanpa perantara (Notaris/Pengacara). Evaluasi dampak teknologi ini terhadap efisiensi bisnis!",
+            options: [
+                "Sangat lambat karena harus disetujui oleh seluruh komputer di dunia terlebih dahulu.",
+                "Meningkatkan biaya administrasi karena membutuhkan tenaga ahli IT yang sangat mahal.",
+                "Sangat efisien karena memangkas biaya perantara (birokrasi), transparan, dan tidak bisa dimanipulasi sepihak, meski ada risiko jika kode program salah sejak awal.",
+                "Menyebabkan semua notaris langsung kehilangan pekerjaan dalam waktu satu hari."
+            ],
+            answer: 2
+        },
+        {
+            q: "Autentikasi pembayaran digital kini banyak beralih dari PIN ke sistem Biometrik (Sidik Jari/Face ID). Evaluasi ancaman keamanan jangka panjang dari penggunaan data biometrik dalam transaksi keuangan!",
+            options: [
+                "Sensor sidik jari mudah rusak jika tangan pengguna sering berkeringat.",
+                "Kata sandi (PIN) bisa diganti kapan saja jika bocor, namun jika data sidik jari/wajah Anda diretas dan dipalsukan (Deepfake), Anda tidak bisa 'mengganti' sidik jari atau wajah Anda seumur hidup.",
+                "Sistem biometrik membuat transaksi berjalan lebih lambat dari mengetik PIN biasa.",
+                "Ponsel harus selalu terhubung ke satelit luar angkasa agar Face ID berfungsi."
+            ],
+            answer: 1
+        },
+        {
+            q: "Sebuah desa nelayan mulai beralih memotong jalur tengkulak (middleman) dengan menjual ikan langsung ke konsumen di kota menggunakan aplikasi Lelang Ikan Online. Evaluasi dampak perubahan sistem transaksi ini bagi kesejahteraan nelayan!",
+            options: [
+                "Nelayan merugi karena ongkos kirim ikan ke kota ditanggung penuh oleh mereka.",
+                "Margin keuntungan nelayan meningkat signifikan karena harga jual lebih adil (sesuai pasar) tanpa potongan tengkulak, namun menuntut kemampuan logistik pengemasan yang baik (cold chain).",
+                "Tengkulak akan membakar perahu nelayan sehingga perikanan hancur.",
+                "Konsumen di kota tidak akan mau membeli karena ikan online biasanya palsu."
+            ],
+            answer: 1
+        },
+        {
+            q: "Meskipun e-commerce menawarkan banyak kemudahan, masih banyak masyarakat desa yang memilih Cash on Delivery (COD/Bayar di tempat). Evaluasi alasan psikologis dan rasional di balik tingginya penggunaan COD di Indonesia!",
+            options: [
+                "Masyarakat desa tidak punya uang tunai sehingga meminta kurir menalangi dulu.",
+                "Kurir COD biasanya memberikan diskon khusus secara sepihak saat di lokasi.",
+                "Masih rendahnya kepercayaan masyarakat terhadap kejujuran penjual online (takut barang tidak sesuai/fiktif) dan keterbatasan akses kepemilikan rekening perbankan.",
+                "Pemerintah mewajibkan COD untuk mencegah uang beredar di luar desa."
+            ],
+            answer: 2
+        },
+
+        // TEMA 5: LITERASI FINANSIAL (41-50)
+        {
+            q: "Seorang karyawan mendapat bonus akhir tahun Rp 10 Juta. Ia belum memiliki Dana Darurat (Emergency Fund), namun temannya mengajak investasi saham yang sedang naik daun agar uangnya cepat berlipat ganda. Evaluasi keputusan paling bijak secara hierarki literasi finansial!",
+            options: [
+                "Mengikuti temannya investasi saham 100%, karena inflasi akan menggerus uang jika hanya disimpan.",
+                "Membelikan barang mewah sebagai self-reward atas kerja kerasnya selama setahun.",
+                "Mengalokasikan utamanya untuk membangun fondasi Dana Darurat terlebih dahulu (di instrumen likuid/mudah dicairkan), karena investasi saham berisiko tinggi (High Risk) saat butuh uang mendesak.",
+                "Menyumbangkan seluruhnya agar mendapat balasan yang berlipat di masa depan."
+            ],
+            answer: 2
+        },
+        {
+            q: "Pak Budi ditawari program investasi perkebunan dengan janji keuntungan (return) pasti 20% setiap bulan, tanpa risiko rugi. Evaluasi rasionalitas penawaran investasi ini berdasarkan prinsip keuangan modern!",
+            options: [
+                "Sangat rasional karena sektor perkebunan tidak pernah terkena dampak krisis ekonomi.",
+                "Melanggar hukum alam 'High Risk High Return'. Janji keuntungan pasti yang tidak masuk akal tinggi kemungkinan besar adalah penipuan/skema Ponzi bodong.",
+                "Pak Budi harus segera menjual rumahnya untuk ikut investasi ini mumpung kuota masih ada.",
+                "Pemerintah pasti sudah menjamin investasi tersebut karena diiklankan di media sosial."
+            ],
+            answer: 1
+        },
+        {
+            q: "Metode penganggaran (Budgeting) 50-30-20 (50% Kebutuhan, 30% Keinginan, 20% Tabungan) sangat populer. Jika seseorang mendadak terkena PHK, evaluasi penyesuaian anggaran (budgeting) apa yang paling darurat dilakukan!",
+            options: [
+                "Tetap pada porsi 50-30-20 dengan menggunakan uang dari pinjaman online.",
+                "Memangkas porsi Tabungan (20%) menjadi 0% agar porsi Keinginan (30%) seperti ngopi dan jalan-jalan tetap terpenuhi untuk menjaga kewarasan.",
+                "Memangkas drastis porsi Keinginan (30%) mendekati nol, dan mengalihkan sisa uang pesangon murni untuk Kebutuhan Pokok (50%) agar masa bertahan hidup (runway) lebih panjang.",
+                "Meningkatkan porsi Kebutuhan (50%) menjadi 100% dengan cara makan di restoran mewah setiap hari."
+            ],
+            answer: 2
+        },
+        {
+            q: "Sinta selalu membayar asuransi kesehatan (BPJS) setiap bulan meskipun ia merasa selalu sehat dan tidak pernah sakit. Evaluasi pola pikir finansial Sinta terhadap pengelolaan risiko!",
+            options: [
+                "Sinta membuang-buang uang secara sia-sia untuk sesuatu yang tidak ia gunakan.",
+                "Sinta sangat cerdas karena BPJS akan mengembalikan uangnya utuh jika ia tidak pernah sakit.",
+                "Tindakan preventif yang tepat (Risk Transfer); membayar premi kecil rutin lebih rasional daripada harus menanggung kebangkrutan aset secara mendadak jika kelak terkena penyakit kritis/berbiaya mahal.",
+                "Sinta kurang beriman karena asuransi menunjukkan ia terlalu takut akan takdir penyakit."
+            ],
+            answer: 2
+        },
+        {
+            q: "Konsep 'Bunga Majemuk' (Compound Interest) disebut oleh Albert Einstein sebagai keajaiban dunia ke-8. Evaluasi dampak waktu (Time Horizon) terhadap investasi pasif bulanan di reksadana dengan konsep bunga majemuk!",
+            options: [
+                "Bunga majemuk membuat uang berkurang karena dipotong pajak berlapis.",
+                "Semakin awal (muda) seseorang mulai berinvestasi, semakin dahsyat hasil gulungannya di hari tua karena bunga dari bulan sebelumnya ikut menghasilkan bunga baru lagi.",
+                "Investasi dalam waktu singkat (1 bulan) akan menghasilkan keuntungan jauh lebih besar daripada 10 tahun.",
+                "Bunga majemuk hanya berlaku untuk orang kaya yang menabung di atas 1 Miliar Rupiah."
+            ],
+            answer: 1
+        },
+        {
+            q: "Rendi ingin membeli mobil baru senilai Rp 300 Juta menggunakan kredit berjangka 5 tahun. Evaluasi pembelian mobil (aset depresiasi) dengan metode utang jangka panjang ini dari sudut pandang kesehatan finansial!",
+            options: [
+                "Sangat menguntungkan, karena harga mobil 5 tahun lagi pasti menjadi Rp 500 Juta.",
+                "Merupakan 'Bad Debt' (Utang Buruk) karena ia membayar bunga pinjaman yang mahal untuk aset yang nilainya justru terus turun (depresiasi) setiap tahun, merugikan secara net worth.",
+                "Utang mobil akan membuat Rendi disukai oleh atasannya sehingga cepat naik jabatan.",
+                "Tidak masalah selama mobil tersebut dipakai untuk gaya-gayaan berkunjung ke rumah teman."
+            ],
+            answer: 1
+        },
+        {
+            q: "Prinsip 'Don't put all your eggs in one basket' (Jangan taruh semua telur di satu keranjang) adalah dasar Diversifikasi Investasi. Evaluasi skenario terbaik penerapan prinsip ini!",
+            options: [
+                "Membeli saham dari 10 perusahaan berbeda namun semuanya berbisnis di sektor batu bara.",
+                "Menaruh seluruh uang warisan ke dalam deposito di satu bank BUMN terpercaya.",
+                "Membagi portofolio ke kelas aset yang berbeda sifat (misal: 40% Obligasi Negara, 30% Saham, 20% Emas, 10% Kas/Tunai) agar jika satu sektor anjlok, yang lain menyeimbangkan.",
+                "Menyimpan uang tunai di 5 lemari pakaian yang berbeda di dalam rumah."
+            ],
+            answer: 2
+        },
+        {
+            q: "Banyak pekerja muda mengalami 'Gaji numpang lewat' setiap awal bulan akibat utang cicilan yang menumpuk. Evaluasi rasio batas aman Debt-to-Income (Rasio Utang terhadap Pendapatan) yang direkomendasikan para perencana keuangan!",
+            options: [
+                "Utang maksimal 70% dari gaji agar bisa memiliki banyak barang mewah saat masih muda.",
+                "Utang maksimal 10% dari gaji, selebihnya harus ditabung di bawah bantal.",
+                "Beban cicilan utang maksimal tidak boleh lebih dari 30% pendapatan bulanan, agar arus kas (cash flow) tetap sehat untuk hidup dan investasi.",
+                "Tidak ada batas maksimal utang, selama pinjol masih mau memberikan pinjaman."
+            ],
+            answer: 2
+        },
+        {
+            q: "Apa evaluasi paling komprehensif mengenai perbedaan mendasar antara 'Menabung' (Saving) dan 'Berinvestasi' (Investing) di era modern?",
+            options: [
+                "Menabung berarti mengamankan uang pokok demi likuiditas jangka pendek dan darurat (tergerus inflasi), sementara Investasi menumbuhkan uang untuk mengalahkan inflasi jangka menengah-panjang dengan mengambil sejumlah risiko.",
+                "Menabung dilakukan di bank syariah, investasi dilakukan di bank konvensional.",
+                "Menabung khusus untuk anak-anak sekolah, investasi wajib untuk orang dewasa.",
+                "Tidak ada bedanya, keduanya sama-sama membuat orang cepat menjadi miliarder."
+            ],
+            answer: 0
+        },
+        {
+            q: "Farel berusia 25 tahun, memiliki gaji UMR, belum menikah, namun sudah memikirkan Dana Pensiun (Retirement Plan). Teman-temannya menganggap Farel berlebihan. Evaluasi tindakan Farel tersebut secara logis!",
+            options: [
+                "Tindakan Farel memang konyol, dana pensiun baru pantas dipikirkan saat usia 50 tahun ke atas.",
+                "Farel sangat cerdas memanfaatkan 'Time Horizon' panjang. Menabung pensiun sejak UMR dengan nominal kecil akan lebih ringan dan hasilnya eksponensial di hari tua dibanding baru mulai menabung besar di usia 45 tahun.",
+                "Farel sebaiknya keluar dari pekerjaannya dan meminta uang pensiun dini dari perusahaan.",
+                "Farel harus memberikan seluruh gajinya kepada orang tua sebagai bentuk dana pensiun tradisi."
+            ],
+            answer: 1
+        }
+    ];
+
+    // --- GAME LOGIC ---
+    let currentQuestionIndex = 0;
+    let correctAnswersCount = 0;
+    let hasAnswered = false;
+    let playerName = "";
+
+    const startScreen = document.getElementById("start-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+    const questionText = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options-container");
+    const nextBtn = document.getElementById("next-btn");
+    const questionTracker = document.getElementById("question-tracker");
+    const playerDisplay = document.getElementById("player-display");
+    const nameInput = document.getElementById("player-name");
+    const progressBar = document.getElementById("progress-bar");
+
+    // Modal Control
+    function showModal(msg) {
+        document.getElementById('modal-text').innerText = msg;
+        document.getElementById('custom-modal').style.display = 'flex';
+    }
+    function closeModal() {
+        document.getElementById('custom-modal').style.display = 'none';
+    }
+
+    function startGame() {
+        const name = nameInput.value.trim();
+        if(name === "") {
+            showModal("Mohon masukkan nama kamu terlebih dahulu sebelum memulai evaluasi!");
+            return;
+        }
+        playerName = name;
+        playerDisplay.textContent = "👤 " + playerName;
+        
+        startScreen.classList.remove("active");
+        quizScreen.classList.add("active");
+        
+        showQuestion();
+    }
+
+    function updateProgress() {
+        const percent = ((currentQuestionIndex) / questions.length) * 100;
+        progressBar.style.width = percent + "%";
+    }
+
+    function showQuestion() {
+        hasAnswered = false;
+        nextBtn.style.display = "none";
+        optionsContainer.innerHTML = "";
+        updateProgress();
+        
+        const qData = questions[currentQuestionIndex];
+        questionTracker.textContent = `Kasus ${currentQuestionIndex + 1} / ${questions.length}`;
+        questionText.textContent = qData.q;
+
+        const letters = ['A', 'B', 'C', 'D'];
+
+        qData.options.forEach((opt, index) => {
+            const btn = document.createElement("div");
+            btn.classList.add("option");
+            
+            // Letter Box
+            const letterSpan = document.createElement("span");
+            letterSpan.classList.add("option-letter");
+            letterSpan.textContent = letters[index];
+            
+            // Text Content
+            const textSpan = document.createElement("span");
+            textSpan.textContent = opt;
+
+            btn.appendChild(letterSpan);
+            btn.appendChild(textSpan);
+
+            btn.onclick = () => selectAnswer(index, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function selectAnswer(selectedIndex, btnElement) {
+        if(hasAnswered) return;
+        hasAnswered = true;
+
+        const qData = questions[currentQuestionIndex];
+        const allOptions = optionsContainer.querySelectorAll(".option");
+
+        if(selectedIndex === qData.answer) {
+            btnElement.classList.add("correct-reveal");
+            correctAnswersCount++;
+        } else {
+            btnElement.classList.add("wrong-reveal");
+            // Show correct answer to student
+            allOptions[qData.answer].classList.add("correct-reveal");
+        }
+
+        // Disable clicks on all options
+        allOptions.forEach(opt => opt.style.cursor = "default");
+
+        nextBtn.style.display = "block";
+        if(currentQuestionIndex === questions.length - 1) {
+            nextBtn.textContent = "Akhiri & Lihat Hasil Evaluasi";
+        }
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if(currentQuestionIndex < questions.length) {
+            showQuestion();
+        } else {
+            endGame();
+        }
+    }
+
+    function endGame() {
+        quizScreen.classList.remove("active");
+        resultScreen.classList.add("active");
+
+        const score = Math.round((correctAnswersCount / questions.length) * 100);
+
+        document.getElementById("final-name").textContent = playerName;
+        document.getElementById("final-score").textContent = score;
+
+        let feedback = "";
+        if(score >= 85) feedback = "Luar Biasa! Kemampuan analisis ekonomimu sangat tajam dan setara dengan praktisi keuangan.";
+        else if(score >= 70) feedback = "Bagus! Kamu sudah memahami konsep dasar interaksi ekonomi digital dengan baik.";
+        else if(score >= 50) feedback = "Cukup baik. Namun kamu perlu meningkatkan literasi finansial dan analisis strategismu.";
+        else feedback = "Jangan menyerah! Terus pelajari fenomena ekonomi digital agar kamu tidak tertinggal di abad 21.";
+
+        document.getElementById("feedback-text").textContent = feedback;
+        
+        // Save score to window object for certificate generator
+        window.finalScore = score;
+    }
+
+    function downloadCertificate() {
+        const canvas = document.getElementById("cert-canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Background Color
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw Aesthetic Borders / Background Patterns
+        // Top polygon
+        ctx.fillStyle = "#0f2027";
+        ctx.beginPath();
+        ctx.moveTo(0, 0); ctx.lineTo(canvas.width, 0); ctx.lineTo(canvas.width, 150); ctx.lineTo(0, 50);
+        ctx.fill();
+
+        // Bottom polygon
+        ctx.fillStyle = "#f59e0b"; // Gold
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height); ctx.lineTo(canvas.width, canvas.height); ctx.lineTo(canvas.width, canvas.height - 100); ctx.lineTo(0, canvas.height - 50);
+        ctx.fill();
+
+        // Inner Border
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+
+        // Text configurations
+        ctx.textAlign = "center";
+        
+        ctx.font = "bold 50px 'Plus Jakarta Sans', Arial";
+        ctx.fillStyle = "#1e293b";
+        ctx.fillText("SERTIFIKAT LITERASI FINANSIAL", canvas.width / 2, 220);
+
+        ctx.font = "24px 'Plus Jakarta Sans', Arial";
+        ctx.fillStyle = "#64748b";
+        ctx.fillText("Menyatakan dengan bangga bahwa:", canvas.width / 2, 280);
+
+        // Player Name
+        ctx.font = "bold 55px 'Plus Jakarta Sans', Arial";
+        ctx.fillStyle = "#0ea5e9";
+        ctx.fillText(playerName.toUpperCase(), canvas.width / 2, 360);
+        
+        // Underline
+        const textWidth = ctx.measureText(playerName.toUpperCase()).width;
+        ctx.beginPath();
+        ctx.moveTo((canvas.width / 2) - (textWidth / 2) - 30, 375);
+        ctx.lineTo((canvas.width / 2) + (textWidth / 2) + 30, 375);
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "#f59e0b";
+        ctx.stroke();
+
+        ctx.font = "22px 'Plus Jakarta Sans', Arial";
+        ctx.fillStyle = "#475569";
+        ctx.fillText("Telah menyelesaikan Evaluasi HOTS (C5) Mata Pelajaran IPS Kelas 9", canvas.width / 2, 440);
+        
+        ctx.font = "bold 26px 'Plus Jakarta Sans', Arial";
+        ctx.fillStyle = "#1e293b";
+        ctx.fillText("Materi: Ekonomi Digital, Lembaga Keuangan & Interaksi Abad 21", canvas.width / 2, 480);
+
+        // Score Ribbon logic
+        ctx.fillStyle = "#10b981"; // Emerald Green
+        ctx.beginPath();
+        ctx.roundRect((canvas.width/2) - 150, 520, 300, 60, 10);
+        ctx.fill();
+
+        ctx.font = "bold 32px 'Plus Jakarta Sans', Arial";
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("SKOR AKHIR: " + window.finalScore, canvas.width / 2, 560);
+
+        // Date
+        ctx.font = "italic 18px Arial";
+        ctx.fillStyle = "#94a3b8";
+        const dateObj = new Date();
+        const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+        ctx.fillText("Tanggal Terbit: " + dateObj.toLocaleDateString("id-ID", optionsDate), canvas.width / 2, 620);
+
+        // Trigger Download
+        const link = document.createElement("a");
+        link.download = `Sertifikat_IPS_${playerName.replace(/\s+/g, '_')}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }
+
+    // Allow Enter key in input field
+    nameInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            startGame();
+        }
+    });
+</script>
+</body>
+</html>
